@@ -3,7 +3,6 @@ import { vi } from "vitest";
 import { walletMockState, walletModalMock } from "./tests/mocks/walletState";
 
 if (typeof global.fetch === "undefined") {
-  // @ts-expect-error — minimal stub so tests can spy on fetch regardless of runtime.
   global.fetch = () => Promise.reject(new Error("fetch not implemented in test env"));
 }
 
