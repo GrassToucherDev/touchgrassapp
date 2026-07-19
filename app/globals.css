@@ -1,14 +1,5 @@
 @import "tailwindcss";
 
-/*
- * Design tokens for the Touch Grass App.
- * Palette matches the bright/playful direction used on touchgrass.today
- * (cream, grass green, sunflower yellow, harvest orange). Fonts match the
- * real site's Google Fonts: Nunito (display/headings) + DM Sans (body).
- * If the real site's style.css defines slightly different hex values,
- * update the tokens below to match exactly — this is a best-effort match
- * made without direct access to that file.
- */
 @theme {
   --color-cream: #fbf3de;
   --color-cream-dark: #f3e7c7;
@@ -56,10 +47,6 @@ body {
   background-color: var(--color-cream);
   color: var(--color-ink);
 }
-
-/* Default Solana wallet modal styling, overridden selectively below so it
-   doesn't clash with the rest of the app's rounded/playful look. */
-@import "@solana/wallet-adapter-react-ui/styles.css";
 
 .wallet-adapter-button {
   font-family: var(--font-display) !important;

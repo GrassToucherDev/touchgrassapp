@@ -1,0 +1,72 @@
+nohup: ignoring input
+
+> touchgrass-app@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.10 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.0.1.15:3000
+✓ Ready in 766ms
+
+⨯ ./app/globals.css:951:8
+Parsing CSS source code failed
+  [90m949 |[0m   }
+  [90m950 |[0m }
+[31m[1m>[0m [90m951 |[0m @[36mimport[0m url([32m'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=sw...[0m
+  [90m    |[0m        [31m[1m^[0m
+  [90m952 |[0m .wallet-adapter-button {
+  [90m953 |[0m   background-color: transparent;
+  [90m954 |[0m   border: none;
+
+@import rules must precede all rules aside from @charset and @layer statements
+
+Generated code of PostCSS transform of file content of app/globals.css:
+./app/globals.css:951:8
+  [90m949 |[0m   }
+  [90m950 |[0m }
+[31m[1m>[0m [90m951 |[0m @[36mimport[0m url([32m'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=sw...[0m
+  [90m    |[0m        [31m[1m^[0m
+  [90m952 |[0m .wallet-adapter-button {
+  [90m953 |[0m   background-color: transparent;
+  [90m954 |[0m   border: none;
+
+Import trace:
+  Client Component Browser:
+    ./app/globals.css [Client Component Browser]
+    ./app/layout.tsx [Server Component]
+
+
+ GET / 500 in 288ms (next.js: 140ms, application-code: 149ms)
+[browser] Uncaught Error: ./app/globals.css:951:8
+Parsing CSS source code failed
+  949 |   }
+  950 | }
+> 951 | @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=sw...
+      |        ^
+  952 | .wallet-adapter-button {
+  953 |   background-color: transparent;
+  954 |   border: none;
+
+@import rules must precede all rules aside from @charset and @layer statements
+
+Generated code of PostCSS transform of file content of app/globals.css:
+./app/globals.css:951:8
+  949 |   }
+  950 | }
+> 951 | @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=sw...
+      |        ^
+  952 | .wallet-adapter-button {
+  953 |   background-color: transparent;
+  954 |   border: none;
+
+Import trace:
+  Client Component Browser:
+    ./app/globals.css [Client Component Browser]
+    ./app/layout.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/globals.css:951:8)
+    at <unknown> (./app/globals.css:951:8)
+    at <unknown> (Error: (./app/globals.css:951:8)
+    at <unknown> (./app/globals.css:951:8)
+ GET /service-worker.js 500 in 35ms (next.js: 21ms, application-code: 15ms)
