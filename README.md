@@ -139,3 +139,4 @@ wallet `sendTransaction`, anywhere in this flow — the "no transaction" tests a
   smoke test only — add a Playwright viewport test (375px) for a real guarantee.
 - No `/proof-of-grass`, `/leaderboard`, `/quests`, `/premium`, `/profile` functionality yet — all
   five are intentionally simple placeholders per the brief.
+# touchgrassapp
