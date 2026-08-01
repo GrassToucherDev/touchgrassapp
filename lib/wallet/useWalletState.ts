@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback } from "react";
-import { useWallet as useSolanaWallet } from "@solana/wallet-adapter-react";
+import { useCallback, useMemo } from "react";
+import { useWallet as useSolanaWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import type { AnchorWallet } from "@solana/wallet-adapter-react";
 
 export interface WalletState {
   connected: boolean;
@@ -11,6 +12,10 @@ export interface WalletState {
   shortAddress: string | null;
   connect: () => Promise<void>;
   disconnect: () => void;
+  // The real wallet object, needed only by code that actually signs and
+  // sends transactions (lib/harvest/program.ts). Everything else in the
+  // app should keep using the simplified fields above.
+  anchorWallet: AnchorWallet | undefined;
 }
 
 function shorten(address: string): string {
@@ -18,18 +23,11 @@ function shorten(address: string): string {
   return `${address.slice(0, 4)}...${address.slice(-4)}`;
 }
 
-/**
- * Every app component reads wallet state through this hook rather than
- * @solana/wallet-adapter-react directly. If the underlying library ever
- * changes (e.g. to @solana/kit + @solana/react-hooks), only this file
- * needs to change — the returned shape stays the same.
- */
 export function useWalletState(): WalletState {
   const { publicKey, connected, connecting, disconnect: adapterDisconnect } = useSolanaWallet();
   const { setVisible } = useWalletModal();
+  const anchorWallet = useAnchorWallet();
 
-  // "Connect" opens the wallet-selection modal; the adapter completes the
-  // actual connection once the person picks a wallet.
   const connect = useCallback(async () => {
     setVisible(true);
   }, [setVisible]);
@@ -38,7 +36,7 @@ export function useWalletState(): WalletState {
     void adapterDisconnect();
   }, [adapterDisconnect]);
 
-  const address = publicKey ? publicKey.toBase58() : null;
+  const address = useMemo(() => (publicKey ? publicKey.toBase58() : null), [publicKey]);
 
   return {
     connected,
@@ -47,5 +45,6 @@ export function useWalletState(): WalletState {
     shortAddress: address ? shorten(address) : null,
     connect,
     disconnect,
+    anchorWallet,
   };
 }

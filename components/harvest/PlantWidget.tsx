@@ -7,19 +7,38 @@ import { PlantConfirmationModal } from "./PlantConfirmationModal";
 import { useWalletState } from "@/lib/wallet/useWalletState";
 import { formatTokenAmount } from "@/lib/harvest/utils";
 import { QUICK_SELECT_AMOUNTS } from "@/lib/harvest/mockData";
-import type { SeasonConfig } from "@/lib/harvest/types";
+import {
+  getProgram,
+  seasonConfigPda,
+  plantPositionPda,
+  escrowAuthorityPda,
+  escrowTokenPda,
+} from "@/lib/harvest/program";
+import type { OnChainSeasonConfig } from "@/lib/harvest/useSeasonData";
+import {
+  getAssociatedTokenAddressSync,
+  createAssociatedTokenAccountInstruction,
+  TOKEN_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
+import { PublicKey, SystemProgram } from "@solana/web3.js";
+import * as anchor from "@coral-xyz/anchor";
+import { useMyPosition } from "@/lib/harvest/useMyPosition";
 
 export function PlantWidget({
   season,
   onPlantConfirmed,
 }: {
-  season: SeasonConfig;
-  onPlantConfirmed: (amount: number) => void;
+  season: OnChainSeasonConfig;
+  onPlantConfirmed: () => void;
 }) {
   const { minimumDeposit, depositIncrement } = season;
   const [amount, setAmount] = useState<number>(minimumDeposit);
   const [modalOpen, setModalOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const wallet = useWalletState();
+  const { position: existingPosition, refetch: refetchPosition } = useMyPosition(season.seasonId);
 
   function increase() {
     setAmount((prev) => prev + depositIncrement);
@@ -38,12 +57,74 @@ export function PlantWidget({
       void wallet.connect();
       return;
     }
+    setSubmitError(null);
     setModalOpen(true);
   }
 
-  function handleConfirmPreview() {
-    onPlantConfirmed(amount);
-    setModalOpen(false);
+  async function handleConfirmPreview() {
+    if (!wallet.anchorWallet) {
+      setSubmitError("Wallet not properly connected.");
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const program = getProgram(wallet.anchorWallet);
+      if (!program) throw new Error("Could not build program client.");
+
+      const planter = wallet.anchorWallet.publicKey;
+      const mint = new PublicKey(season.mint);
+      const [seasonPda] = seasonConfigPda(season.seasonId);
+      const [positionPda] = plantPositionPda(season.seasonId, planter);
+      const [escrowAuthPda] = escrowAuthorityPda(season.seasonId, planter);
+      const [escrowTokenAcct] = escrowTokenPda(season.seasonId, planter);
+
+      const planterAta = getAssociatedTokenAddressSync(mint, planter);
+
+      // Create the planter's token account if it doesn't exist yet —
+      // first-time planters won't have one.
+      const connection = program.provider.connection;
+      const ataInfo = await connection.getAccountInfo(planterAta);
+      const preInstructions = [];
+      if (!ataInfo) {
+        preInstructions.push(
+          createAssociatedTokenAccountInstruction(
+            planter,
+            planterAta,
+            planter,
+            mint
+          )
+        );
+      }
+
+      const sig = await program.methods
+        .plant(new anchor.BN(season.seasonId), new anchor.BN(amount))
+        .accounts({
+          planter,
+          seasonConfig: seasonPda,
+          plantPosition: positionPda,
+          escrowAuthority: escrowAuthPda,
+          escrowTokenAccount: escrowTokenAcct,
+          planterTokenAccount: planterAta,
+          mint,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+        })
+        .preInstructions(preInstructions)
+        .rpc();
+
+      console.log("✅ plant tx:", sig);
+      void refetchPosition();
+      onPlantConfirmed();
+      setModalOpen(false);
+    } catch (e: any) {
+      console.error("Plant failed:", e);
+      setSubmitError(e.message?.slice(0, 200) ?? "Transaction failed.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -116,6 +197,18 @@ export function PlantWidget({
         )}
       </div>
 
+      {submitError && (
+        <p className="mt-2 rounded-xl2 bg-harvest/10 px-3 py-2 text-xs font-medium text-harvest-dark">
+          {submitError}
+        </p>
+      )}
+
+      {wallet.connected && existingPosition && (
+        <div className="mt-4 rounded-xl2 bg-grass/10 px-4 py-3 text-center text-sm font-semibold text-grass-dark">
+          ✅ You&apos;ve planted {existingPosition.amount.toLocaleString()} $TOUCHGRASS this season so far.
+        </div>
+      )}
+
       <Button
         variant={wallet.connected ? "primary" : "secondary"}
         size="lg"
@@ -126,7 +219,9 @@ export function PlantWidget({
         {wallet.connecting
           ? "Connecting..."
           : wallet.connected
-            ? "🌾 Plant $TOUCHGRASS"
+            ? existingPosition
+              ? "🌾 Plant More $TOUCHGRASS"
+              : "🌾 Plant $TOUCHGRASS"
             : "Connect Wallet"}
       </Button>
       {!wallet.connected && (
@@ -139,9 +234,12 @@ export function PlantWidget({
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onConfirm={handleConfirmPreview}
-        season={season}
+        submitting={submitting}
+        seasonDescription={season.description}
         amount={amount}
         walletAddress={wallet.shortAddress}
+        harvestDate={season.harvestDate}
+        plantingEnd={season.plantingEnd}
       />
     </Card>
   );

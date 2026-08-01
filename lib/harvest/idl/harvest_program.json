@@ -1,0 +1,986 @@
+{
+  "address": "Gxcx3EpjGvw6rv2FWSCxkcrfhT4N919phYbNnYCbarZr",
+  "metadata": {
+    "name": "harvest_program",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "claim_principal",
+      "discriminator": [
+        126,
+        115,
+        235,
+        153,
+        162,
+        140,
+        69,
+        171
+      ],
+      "accounts": [
+        {
+          "name": "planter",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "season_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  97,
+                  115,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "plant_position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              },
+              {
+                "kind": "account",
+                "path": "planter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              },
+              {
+                "kind": "account",
+                "path": "planter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119,
+                  95,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              },
+              {
+                "kind": "account",
+                "path": "planter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "planter_token_account",
+          "writable": true
+        },
+        {
+          "name": "mint",
+          "relations": [
+            "season_config"
+          ]
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "season_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "configure_rewards",
+      "discriminator": [
+        38,
+        43,
+        234,
+        168,
+        212,
+        165,
+        182,
+        138
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "protocol_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "season_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  97,
+                  115,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "season_id",
+          "type": "u64"
+        },
+        {
+          "name": "reward_pool_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "initialize_protocol",
+      "discriminator": [
+        188,
+        233,
+        252,
+        106,
+        134,
+        146,
+        202,
+        91
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "protocol_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize_season",
+      "discriminator": [
+        48,
+        218,
+        111,
+        51,
+        235,
+        207,
+        4,
+        119
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "protocol_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "season_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  97,
+                  115,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "docs": [
+            "full mint-account validation happens in the `plant` instruction."
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "season_id",
+          "type": "u64"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "planting_start",
+          "type": "i64"
+        },
+        {
+          "name": "planting_end",
+          "type": "i64"
+        },
+        {
+          "name": "harvest_date",
+          "type": "i64"
+        },
+        {
+          "name": "minimum_deposit",
+          "type": "u64"
+        },
+        {
+          "name": "deposit_increment",
+          "type": "u64"
+        },
+        {
+          "name": "receipt_metadata_uri",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "plant",
+      "discriminator": [
+        200,
+        121,
+        224,
+        150,
+        235,
+        239,
+        156,
+        246
+      ],
+      "accounts": [
+        {
+          "name": "planter",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "season_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  97,
+                  115,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "plant_position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              },
+              {
+                "kind": "account",
+                "path": "planter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow_authority",
+          "docs": [
+            "account; holds no data of its own."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              },
+              {
+                "kind": "account",
+                "path": "planter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119,
+                  95,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              },
+              {
+                "kind": "account",
+                "path": "planter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "planter_token_account",
+          "writable": true
+        },
+        {
+          "name": "mint",
+          "relations": [
+            "season_config"
+          ]
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "season_id",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "set_season_status",
+      "discriminator": [
+        74,
+        234,
+        180,
+        180,
+        139,
+        40,
+        189,
+        108
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "protocol_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "season_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  97,
+                  115,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "season_id",
+          "type": "u64"
+        },
+        {
+          "name": "new_status",
+          "type": {
+            "defined": {
+              "name": "SeasonStatus"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "update_admin",
+      "discriminator": [
+        161,
+        176,
+        40,
+        213,
+        60,
+        184,
+        179,
+        228
+      ],
+      "accounts": [
+        {
+          "name": "current_admin",
+          "signer": true
+        },
+        {
+          "name": "protocol_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_admin",
+          "type": "pubkey"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "PlantPosition",
+      "discriminator": [
+        95,
+        195,
+        57,
+        189,
+        94,
+        226,
+        8,
+        118
+      ]
+    },
+    {
+      "name": "ProtocolConfig",
+      "discriminator": [
+        207,
+        91,
+        250,
+        28,
+        152,
+        179,
+        215,
+        209
+      ]
+    },
+    {
+      "name": "SeasonConfig",
+      "discriminator": [
+        199,
+        22,
+        167,
+        203,
+        199,
+        231,
+        215,
+        137
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "DescriptionTooLong",
+      "msg": "Description exceeds maximum length of 200 characters"
+    },
+    {
+      "code": 6001,
+      "name": "MetadataUriTooLong",
+      "msg": "Receipt metadata URI exceeds maximum length of 200 characters"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidPlantingWindow",
+      "msg": "Planting end date must be after planting start date"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidHarvestDate",
+      "msg": "Harvest date must be after planting end date"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidMinimumDeposit",
+      "msg": "Minimum deposit must be greater than zero"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidDepositIncrement",
+      "msg": "Deposit increment must be greater than zero"
+    },
+    {
+      "code": 6006,
+      "name": "NotInPlantingWindow",
+      "msg": "Season is not currently in its planting window"
+    },
+    {
+      "code": 6007,
+      "name": "BelowMinimumDeposit",
+      "msg": "Deposit amount is below the season minimum"
+    },
+    {
+      "code": 6008,
+      "name": "AmountNotOnIncrement",
+      "msg": "Deposit amount is not a valid multiple of the deposit increment"
+    },
+    {
+      "code": 6009,
+      "name": "SeasonNotHarvestReady",
+      "msg": "Season is not yet ready for harvest"
+    },
+    {
+      "code": 6010,
+      "name": "PositionAlreadyClaimed",
+      "msg": "This position has already been claimed"
+    },
+    {
+      "code": 6011,
+      "name": "UnauthorizedProtocolAdmin",
+      "msg": "Only the protocol admin authority can perform this action"
+    }
+  ],
+  "types": [
+    {
+      "name": "PlantPosition",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "season_id",
+            "type": "u64"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "planted_at",
+            "type": "i64"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "PositionStatus"
+              }
+            }
+          },
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PositionStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Planted"
+          },
+          {
+            "name": "Claimed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProtocolConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SeasonConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "season_id",
+            "type": "u64"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "SeasonStatus"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "planting_start",
+            "type": "i64"
+          },
+          {
+            "name": "planting_end",
+            "type": "i64"
+          },
+          {
+            "name": "harvest_date",
+            "type": "i64"
+          },
+          {
+            "name": "minimum_deposit",
+            "type": "u64"
+          },
+          {
+            "name": "deposit_increment",
+            "type": "u64"
+          },
+          {
+            "name": "reward_pool_amount",
+            "type": "u64"
+          },
+          {
+            "name": "receipt_metadata_uri",
+            "type": "string"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SeasonStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Upcoming"
+          },
+          {
+            "name": "Planting"
+          },
+          {
+            "name": "Growing"
+          },
+          {
+            "name": "HarvestReady"
+          },
+          {
+            "name": "Closed"
+          }
+        ]
+      }
+    }
+  ]
+}
