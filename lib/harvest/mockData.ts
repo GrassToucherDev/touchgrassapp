@@ -8,6 +8,7 @@ import type { SeasonConfig } from "./types";
  */
 export const MOCK_SEASON: SeasonConfig = {
   seasonId: "season-1",
+  mint: "11111111111111111111111111111111", // placeholder — this mock isn't used for real transactions
   seasonName: "Season 1",
   status: "growing",
   description: "The first season of collective growth and rewards.",

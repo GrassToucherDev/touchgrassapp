@@ -8,6 +8,10 @@ import { Modal } from "@/components/ui/Modal";
 import { getCountdown, formatDate, formatTokenAmount } from "@/lib/harvest/utils";
 import type { PlantPosition, SeasonConfig } from "@/lib/harvest/types";
 import { useWalletState } from "@/lib/wallet/useWalletState";
+import { getProgram, seasonConfigPda, plantPositionPda, escrowAuthorityPda, escrowTokenPda } from "@/lib/harvest/program";
+import { getAssociatedTokenAddressSync, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { PublicKey } from "@solana/web3.js";
+import * as anchor from "@coral-xyz/anchor";
 
 const STATUS_LABEL: Record<PlantPosition["status"], string> = {
   none: "No position",
@@ -56,10 +60,9 @@ export function PositionCard({
 }) {
   const wallet = useWalletState();
   const [claimModalOpen, setClaimModalOpen] = useState(false);
+  const [claiming, setClaiming] = useState(false);
+  const [claimError, setClaimError] = useState<string | null>(null);
 
-  // `now` is only ever set inside an effect — never read directly from
-  // Date.now() during render — so server and client markup always agree
-  // on the first paint.
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
     setNow(Date.now());
@@ -67,14 +70,14 @@ export function PositionCard({
     return () => clearInterval(id);
   }, []);
 
-  const canClaim = season.harvestReady && position.status === "ready-to-harvest";
+  const canClaim = season.harvestReady && position.status === "locked";
 
   if (position.status === "none") {
     return (
       <Card id="position">
         <h2 className="font-display text-lg font-bold text-ink">My Position</h2>
         <p className="mt-3 text-sm text-ink-soft">
-          You haven&apos;t planted this season yet. Use the Plant widget to preview a position.
+          You haven&apos;t planted this season yet. Use the Plant widget to get started.
         </p>
       </Card>
     );
@@ -87,6 +90,53 @@ export function PositionCard({
       ? 0
       : Math.min(1, Math.max(0, (now - plantingEndMs) / Math.max(1, harvestMs - plantingEndMs)));
   const countdown = getCountdown(season.harvestDate);
+
+  async function handleConfirmClaim() {
+    if (!wallet.anchorWallet) {
+      setClaimError("Wallet not properly connected.");
+      return;
+    }
+
+    setClaiming(true);
+    setClaimError(null);
+
+    try {
+      const program = getProgram(wallet.anchorWallet);
+      if (!program) throw new Error("Could not build program client.");
+
+      const seasonIdNum = Number(season.seasonId.replace("season-", ""));
+      const planter = wallet.anchorWallet.publicKey;
+      const mint = new PublicKey(season.mint);
+      const [seasonPda] = seasonConfigPda(seasonIdNum);
+      const [positionPda] = plantPositionPda(seasonIdNum, planter);
+      const [escrowAuthPda] = escrowAuthorityPda(seasonIdNum, planter);
+      const [escrowTokenAcct] = escrowTokenPda(seasonIdNum, planter);
+      const planterAta = getAssociatedTokenAddressSync(mint, planter);
+
+      const sig = await program.methods
+        .claimPrincipal(new anchor.BN(seasonIdNum))
+        .accounts({
+          planter,
+          seasonConfig: seasonPda,
+          plantPosition: positionPda,
+          escrowAuthority: escrowAuthPda,
+          escrowTokenAccount: escrowTokenAcct,
+          planterTokenAccount: planterAta,
+          mint,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .rpc();
+
+      console.log("✅ claim_principal tx:", sig);
+      onClaim();
+      setClaimModalOpen(false);
+    } catch (e: any) {
+      console.error("Claim failed:", e);
+      setClaimError(e.message?.slice(0, 200) ?? "Transaction failed.");
+    } finally {
+      setClaiming(false);
+    }
+  }
 
   return (
     <Card id="position">
@@ -127,6 +177,12 @@ export function PositionCard({
         </div>
       </dl>
 
+      {claimError && (
+        <p className="mt-3 rounded-xl2 bg-harvest/10 px-3 py-2 text-xs font-medium text-harvest-dark">
+          {claimError}
+        </p>
+      )}
+
       <Button
         variant="primary"
         size="lg"
@@ -136,7 +192,7 @@ export function PositionCard({
       >
         🧺 Claim Principal
       </Button>
-      {!canClaim && (
+      {!canClaim && position.status !== "claimed" && (
         <p className="mt-1 text-center text-xs text-ink-soft">Available on Harvest Day</p>
       )}
 
@@ -146,28 +202,31 @@ export function PositionCard({
         titleId="claim-preview-title"
       >
         <p className="mb-1 inline-flex items-center gap-1.5 rounded-full bg-sun/20 px-3 py-1 text-xs font-semibold text-harvest-dark">
-          Preview only — no tokens will move
+          Real transaction — devnet
         </p>
         <h2 id="claim-preview-title" className="mt-2 font-display text-xl font-bold text-ink">
-          Claim Principal preview
+          Confirm Claim
         </h2>
         <p className="mt-2 text-sm text-ink-soft">
-          This preview would return {formatTokenAmount(position.amount)} $TOUCHGRASS principal to
-          your wallet. Claiming isn&apos;t connected to the blockchain yet.
+          This will return {formatTokenAmount(position.amount)} $TOUCHGRASS principal to your
+          wallet. Your wallet will ask you to approve this transaction.
         </p>
         <div className="mt-6 flex gap-3">
-          <Button variant="ghost" className="flex-1" onClick={() => setClaimModalOpen(false)}>
+          <Button
+            variant="ghost"
+            className="flex-1"
+            onClick={() => setClaimModalOpen(false)}
+            disabled={claiming}
+          >
             Cancel
           </Button>
           <Button
             variant="primary"
             className="flex-1"
-            onClick={() => {
-              onClaim();
-              setClaimModalOpen(false);
-            }}
+            onClick={handleConfirmClaim}
+            disabled={claiming}
           >
-            Confirm Preview
+            {claiming ? "Confirming..." : "Confirm & Sign"}
           </Button>
         </div>
       </Modal>

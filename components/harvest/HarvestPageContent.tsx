@@ -28,6 +28,7 @@ function toDisplaySeason(onChain: OnChainSeasonConfig): SeasonConfig {
   return {
     seasonId: `season-${onChain.seasonId}`,
     seasonName: `Season ${onChain.seasonId}`,
+    mint: onChain.mint,
     status: mapStatus(onChain.status),
     description: onChain.description,
     plantingStart: new Date(onChain.plantingStart * 1000).toISOString(),

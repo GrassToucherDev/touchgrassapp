@@ -3,6 +3,7 @@ export type SeasonStatus = "upcoming" | "planting" | "growing" | "harvest-ready"
 export interface SeasonConfig {
   seasonId: string;
   seasonName: string;
+  mint: string;
   status: SeasonStatus;
   description: string;
   /** ISO timestamps — countdown and "time remaining" are derived from these, never hardcoded. */
