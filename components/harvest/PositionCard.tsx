@@ -202,7 +202,7 @@ export function PositionCard({
         titleId="claim-preview-title"
       >
         <p className="mb-1 inline-flex items-center gap-1.5 rounded-full bg-sun/20 px-3 py-1 text-xs font-semibold text-harvest-dark">
-          Real transaction — devnet
+          Real transaction — mainnet
         </p>
         <h2 id="claim-preview-title" className="mt-2 font-display text-xl font-bold text-ink">
           Confirm Claim

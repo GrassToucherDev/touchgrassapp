@@ -65,7 +65,7 @@ export function HarvestPageContent() {
     return (
       <div id="top" className="flex min-h-[50vh] flex-col items-center justify-center gap-2 px-4 text-center">
         <p className="text-ink-soft">
-          Connect your wallet to view live Harvest data from devnet.
+          Connect your wallet to view live Harvest data.
         </p>
         {error && <p className="text-xs text-harvest-dark">{error}</p>}
       </div>

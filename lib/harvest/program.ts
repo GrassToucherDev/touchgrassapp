@@ -5,12 +5,11 @@ import idl from "./idl/harvest_program.json";
 
 export const PROGRAM_ID = new PublicKey("Gxcx3EpjGvw6rv2FWSCxkcrfhT4N919phYbNnYCbarZr");
 
-// Devnet for now — this is the one line that changes when we eventually
-// point the frontend at mainnet.
-export const DEVNET_RPC = "https://api.devnet.solana.com";
+// MAINNET — real $TOUCHGRASS, real users, real funds.
+export const RPC_ENDPOINT = "https://api.mainnet-beta.solana.com";
 
 export function getConnection(): Connection {
-  return new Connection(DEVNET_RPC, "confirmed");
+  return new Connection(RPC_ENDPOINT, "confirmed");
 }
 
 export function getProgram(wallet: AnchorWallet | undefined) {

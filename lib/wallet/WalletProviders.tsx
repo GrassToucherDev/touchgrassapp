@@ -7,9 +7,7 @@ import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 
 /**
- * Phase 1: real wallet *connection* only — no transactions are sent from
- * this app yet (see lib/harvest for the Harvest preview flow, which never
- * calls sendTransaction).
+ * MAINNET — real wallet connections, real transactions, real funds.
  *
  * Wallets: intentionally passed as an empty array. Phantom, Solflare, and
  * Backpack all register themselves via the Wallet Standard, so the modal
@@ -19,7 +17,7 @@ import { clusterApiUrl } from "@solana/web3.js";
  * predates Wallet Standard support, add its adapter here explicitly.
  */
 export function WalletProviders({ children }: { children: React.ReactNode }) {
-  const endpoint = useMemo(() => clusterApiUrl("devnet"), []);
+  const endpoint = useMemo(() => clusterApiUrl("mainnet-beta"), []);
 
   return (
     <ConnectionProvider endpoint={endpoint}>
