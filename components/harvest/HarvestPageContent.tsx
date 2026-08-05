@@ -49,7 +49,7 @@ export function HarvestPageContent() {
     position: onChainPosition,
     loading: positionLoading,
     refetch: refetchPosition,
-  } = useMyPosition(ACTIVE_SEASON_ID);
+ } = useMyPosition(ACTIVE_SEASON_ID, onChainSeason?.mint);
 
   if (loading) {
     return (

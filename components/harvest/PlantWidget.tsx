@@ -39,7 +39,7 @@ export function PlantWidget({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const wallet = useWalletState();
-  const { position: existingPosition, refetch: refetchPosition } = useMyPosition(season.seasonId);
+  const { position: existingPosition, refetch: refetchPosition } = useMyPosition(season.seasonId, season.mint);
 
   function increase() {
     setAmount((prev) => prev + depositIncrement);
