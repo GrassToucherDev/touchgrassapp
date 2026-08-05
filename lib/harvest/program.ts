@@ -6,7 +6,7 @@ import idl from "./idl/harvest_program.json";
 export const PROGRAM_ID = new PublicKey("Gxcx3EpjGvw6rv2FWSCxkcrfhT4N919phYbNnYCbarZr");
 
 // MAINNET — real $TOUCHGRASS, real users, real funds.
-export const RPC_ENDPOINT = "https://api.mainnet-beta.solana.com";
+export const RPC_ENDPOINT = process.env.NEXT_PUBLIC_RPC_URL || "https://api.mainnet-beta.solana.com";
 
 export function getConnection(): Connection {
   return new Connection(RPC_ENDPOINT, "confirmed");

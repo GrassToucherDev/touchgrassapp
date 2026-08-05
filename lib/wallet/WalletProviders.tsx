@@ -4,7 +4,6 @@ import "@solana/wallet-adapter-react-ui/styles.css";
 import { useMemo } from "react";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import { clusterApiUrl } from "@solana/web3.js";
 
 /**
  * MAINNET — real wallet connections, real transactions, real funds.
@@ -17,7 +16,10 @@ import { clusterApiUrl } from "@solana/web3.js";
  * predates Wallet Standard support, add its adapter here explicitly.
  */
 export function WalletProviders({ children }: { children: React.ReactNode }) {
-  const endpoint = useMemo(() => clusterApiUrl("mainnet-beta"), []);
+  const endpoint = useMemo(
+    () => process.env.NEXT_PUBLIC_RPC_URL || "https://api.mainnet-beta.solana.com",
+    []
+  );
 
   return (
     <ConnectionProvider endpoint={endpoint}>
