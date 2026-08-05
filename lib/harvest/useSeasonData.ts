@@ -3,6 +3,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { getProgram, seasonConfigPda } from "./program";
 import { useWalletState } from "@/lib/wallet/useWalletState";
+import { getMint } from "@solana/spl-token";
+import * as anchor from "@coral-xyz/anchor";
 
 // Mirrors the on-chain SeasonConfig account shape. Field names are
 // camelCase because that's what Anchor's IDL-driven client produces from
@@ -20,6 +22,8 @@ export interface OnChainSeasonConfig {
   depositIncrement: number;
   rewardPoolAmount: number;
   receiptMetadataUri: string;
+  totalPlanted: number;
+  participantCount: number;
 }
 
 function parseStatus(statusEnum: any): string {
@@ -45,6 +49,26 @@ export function useSeasonData(seasonId: number) {
       const [pda] = seasonConfigPda(seasonId);
       const account: any = await (program.account as any).seasonConfig.fetch(pda);
 
+      // PlantPosition accounts aren't summed on-chain, so total planted and
+      // participant count are derived here by fetching every position for
+      // this season and aggregating client-side.
+      const positions: any[] = await (program.account as any).plantPosition.all([
+        {
+          memcmp: {
+            offset: 8, // skip the 8-byte account discriminator
+            bytes: new anchor.BN(seasonId).toArrayLike(Buffer, "le", 8).toString("base64"),
+            encoding: "base64",
+          },
+        },
+      ]);
+
+      const mintInfo = await getMint(program.provider.connection, account.mint);
+      const divisor = 10 ** mintInfo.decimals;
+      const totalPlantedRaw = positions.reduce(
+        (sum, p) => sum + p.account.amount.toNumber(),
+        0
+      );
+
       setSeason({
         seasonId: account.seasonId.toNumber(),
         authority: account.authority.toBase58(),
@@ -58,6 +82,8 @@ export function useSeasonData(seasonId: number) {
         depositIncrement: account.depositIncrement.toNumber(),
         rewardPoolAmount: account.rewardPoolAmount.toNumber(),
         receiptMetadataUri: account.receiptMetadataUri,
+        totalPlanted: totalPlantedRaw / divisor,
+        participantCount: positions.length,
       });
       setError(null);
     } catch (e: any) {

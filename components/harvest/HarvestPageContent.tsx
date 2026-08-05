@@ -36,8 +36,8 @@ function toDisplaySeason(onChain: OnChainSeasonConfig): SeasonConfig {
     harvestDate: new Date(onChain.harvestDate * 1000).toISOString(),
     minimumDeposit: onChain.minimumDeposit,
     depositIncrement: onChain.depositIncrement,
-    totalPlanted: 0,
-    participantCount: 0,
+    totalPlanted: onChain.totalPlanted,
+    participantCount: onChain.participantCount,
     receiptEnabled: true,
     harvestReady: onChain.status === "harvestReady",
   };
