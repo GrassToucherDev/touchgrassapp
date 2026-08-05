@@ -11,7 +11,7 @@ import { useSeasonData, type OnChainSeasonConfig } from "@/lib/harvest/useSeason
 import { useMyPosition } from "@/lib/harvest/useMyPosition";
 import type { SeasonConfig, SeasonStatus } from "@/lib/harvest/types";
 
-const ACTIVE_SEASON_ID = 3;
+const ACTIVE_SEASON_ID = 1;
 
 function mapStatus(onChainStatus: string): SeasonStatus {
   const map: Record<string, SeasonStatus> = {
