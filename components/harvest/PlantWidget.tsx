@@ -18,6 +18,7 @@ import type { OnChainSeasonConfig } from "@/lib/harvest/useSeasonData";
 import {
   getAssociatedTokenAddressSync,
   createAssociatedTokenAccountInstruction,
+  getMint,
   TOKEN_PROGRAM_ID,
   ASSOCIATED_TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
@@ -99,8 +100,17 @@ export function PlantWidget({
         );
       }
 
+      // Scale the human-readable amount into the mint's base units.
+      // $TOUCHGRASS's decimals are read from the mint itself rather than
+      // assumed, so this stays correct even if that ever changes.
+      const mintInfo = await getMint(connection, mint);
+      const decimals = mintInfo.decimals;
+      const amountBaseUnits = new anchor.BN(amount).mul(
+        new anchor.BN(10).pow(new anchor.BN(decimals))
+      );
+
       const sig = await program.methods
-        .plant(new anchor.BN(season.seasonId), new anchor.BN(amount))
+        .plant(new anchor.BN(season.seasonId), amountBaseUnits)
         .accounts({
           planter,
           seasonConfig: seasonPda,
