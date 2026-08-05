@@ -139,7 +139,7 @@ export function PositionCard({
   }
 
   function flexToX() {
-    const text = `🌱 Just planted ${formatTokenAmount(position.amount)} $TOUCHGRASS in ${season.seasonName}.\n\nLocked until Harvest Day: ${formatDate(season.harvestDate)}.\n\n$TOUCHGRASS #TouchGrass #TheHarvest\napp.touchgrass.today/harvest`;
+    const text = `🌱 Just planted ${formatTokenAmount(position.amount)} $TOUCHGRASS in ${season.seasonName}.\n\nLocked until Harvest Day: ${formatDate(season.harvestDate)}.\n\n$TOUCHGRASS #TouchGrass #TheHarvest\nharvest.touchgrass.today`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
   }
 
