@@ -82,7 +82,7 @@ export function useSeasonData(seasonId: number) {
         depositIncrement: account.depositIncrement.toNumber(),
         rewardPoolAmount: account.rewardPoolAmount.toNumber(),
         receiptMetadataUri: account.receiptMetadataUri,
-        totalPlanted: totalPlantedRaw / divisor,
+        totalPlanted: Math.round(totalPlantedRaw / divisor),
         participantCount: positions.length,
       });
       setError(null);
