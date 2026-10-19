@@ -12,8 +12,11 @@ export interface SeasonConfig {
   harvestDate: string;
   minimumDeposit: number;
   depositIncrement: number;
-  /** Preview-only figures for Phase 1. Never presented as real financial data. */
+  /** Live on-chain totals (summed from PlantPosition accounts). */
   totalPlanted: number;
+  /** Principal still locked in escrow right now (excludes claimed positions). */
+  totalLocked: number;
+  lockedParticipantCount: number;
   participantCount: number;
   receiptEnabled: boolean;
   /** Explicit gate for Claim Principal — separate from `status` per the brief's data structure. */

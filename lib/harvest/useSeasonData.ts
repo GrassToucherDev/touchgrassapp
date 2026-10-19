@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { getProgram, seasonConfigPda } from "./program";
-import { useWalletState } from "@/lib/wallet/useWalletState";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { getReadonlyProgram, seasonConfigPda } from "./program";
 import { getMint } from "@solana/spl-token";
 import * as anchor from "@coral-xyz/anchor";
 
@@ -22,7 +21,12 @@ export interface OnChainSeasonConfig {
   depositIncrement: number;
   rewardPoolAmount: number;
   receiptMetadataUri: string;
+  /** Everything ever planted this season (includes principal already claimed back). */
   totalPlanted: number;
+  /** Principal currently locked in escrow (excludes positions already claimed). */
+  totalLocked: number;
+  /** Wallets with principal still locked. */
+  lockedParticipantCount: number;
   participantCount: number;
 }
 
@@ -32,20 +36,18 @@ function parseStatus(statusEnum: any): string {
 }
 
 export function useSeasonData(seasonId: number) {
-  const { anchorWallet } = useWalletState();
   const [season, setSeason] = useState<OnChainSeasonConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const hasData = useRef(false);
 
   const refetch = useCallback(async () => {
-    const program = getProgram(anchorWallet);
-    if (!program) {
-      setLoading(false);
-      return;
-    }
-
+    // Public data: no wallet needed, so visitors who haven't connected can still see the totals.
     try {
-      setLoading(true);
+      const program = getReadonlyProgram();
+      // Only show the full-page loading state on the first load; later refreshes (after a plant or
+      // claim) update the numbers in place instead of blanking the page.
+      if (!hasData.current) setLoading(true);
       const [pda] = seasonConfigPda(seasonId);
       const account: any = await (program.account as any).seasonConfig.fetch(pda);
 
@@ -64,10 +66,10 @@ export function useSeasonData(seasonId: number) {
 
       const mintInfo = await getMint(program.provider.connection, account.mint);
       const divisor = 10 ** mintInfo.decimals;
-      const totalPlantedRaw = positions.reduce(
-        (sum, p) => sum + p.account.amount.toNumber(),
-        0
-      );
+      const isClaimed = (p: any) => parseStatus(p.account.status) === "claimed";
+      const totalPlantedRaw = positions.reduce((sum, p) => sum + p.account.amount.toNumber(), 0);
+      const lockedPositions = positions.filter((p) => !isClaimed(p));
+      const totalLockedRaw = lockedPositions.reduce((sum, p) => sum + p.account.amount.toNumber(), 0);
 
       setSeason({
         seasonId: account.seasonId.toNumber(),
@@ -83,16 +85,19 @@ export function useSeasonData(seasonId: number) {
         rewardPoolAmount: account.rewardPoolAmount.toNumber(),
         receiptMetadataUri: account.receiptMetadataUri,
         totalPlanted: Math.round(totalPlantedRaw / divisor),
+        totalLocked: Math.round(totalLockedRaw / divisor),
+        lockedParticipantCount: lockedPositions.length,
         participantCount: positions.length,
       });
+      hasData.current = true;
       setError(null);
     } catch (e: any) {
       setError(e.message ?? "Failed to load season data");
-      setSeason(null);
+      if (!hasData.current) setSeason(null);   // keep showing the last good numbers on a failed refresh
     } finally {
       setLoading(false);
     }
-  }, [anchorWallet, seasonId]);
+  }, [seasonId]);
 
   useEffect(() => {
     void refetch();

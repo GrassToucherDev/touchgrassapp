@@ -18,6 +18,8 @@ export const MOCK_SEASON: SeasonConfig = {
   minimumDeposit: 50_000,
   depositIncrement: 50_000,
   totalPlanted: 12_543_210,
+  totalLocked: 12_543_210,
+  lockedParticipantCount: 3_248,
   participantCount: 3_248,
   receiptEnabled: true,
   harvestReady: false,

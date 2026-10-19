@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { SeasonCountdown } from "./SeasonCountdown";
+import { formatTokenAmount } from "@/lib/harvest/utils";
 import type { SeasonConfig } from "@/lib/harvest/types";
 
 export function HarvestHero({ season }: { season: SeasonConfig }) {
@@ -25,6 +26,18 @@ export function HarvestHero({ season }: { season: SeasonConfig }) {
         <span className="font-display text-lg font-bold text-cream">{season.seasonName}</span>
       </div>
       <p className="mt-2 max-w-md text-sm text-cream/70">{season.description}</p>
+
+      <div className="mt-6" aria-live="polite">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sun">Total locked in Harvest</p>
+        <p className="mt-1 font-display text-3xl font-extrabold text-cream sm:text-4xl">
+          {formatTokenAmount(season.totalLocked)}{" "}
+          <span className="text-lg font-bold text-cream/70 sm:text-xl">$TOUCHGRASS</span>
+        </p>
+        <p className="mt-1 text-xs text-cream/60">
+          {formatTokenAmount(season.lockedParticipantCount)} planter
+          {season.lockedParticipantCount === 1 ? "" : "s"} · live on-chain
+        </p>
+      </div>
 
       <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <SeasonCountdown targetIso={season.harvestDate} />
