@@ -18,26 +18,20 @@ export function HarvestHero({ season }: { season: SeasonConfig }) {
       {/* Dark-green wash keeps the meadow on-brand while the text stays readable */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-field via-field/90 to-field/40"
-      />
-      {/* WAGO, the Touch Grass mascot, cheering the season on */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/brand/wago-cheer.png"
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute right-2 top-6 hidden h-52 w-auto drop-shadow-xl sm:block md:right-10 md:h-64"
+        className="absolute inset-0 bg-gradient-to-r from-field via-field/85 to-field/20"
       />
       <div className="relative">
-      <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-sun">
+      <h1 className="m-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/logo.png" alt="" width={28} height={28} className="h-7 w-7 object-contain" />
-        Touch Grass
-      </p>
-      <h1 className="mt-2 font-display text-5xl font-bold leading-none text-cream sm:text-7xl">
-        Harvest
+        <img
+          src="/brand/harvest-logo.png"
+          alt="Harvest"
+          width={900}
+          height={291}
+          className="h-auto w-full max-w-[22rem] drop-shadow-xl sm:max-w-[36rem]"
+        />
       </h1>
-      <p className="mt-3 max-w-lg text-base text-cream/80 sm:text-lg">
+      <p className="mt-4 max-w-lg text-base text-cream/90 sm:text-lg">
         Plant $TOUCHGRASS. Grow together. Harvest together.
       </p>
 

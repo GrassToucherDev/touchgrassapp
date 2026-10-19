@@ -35,9 +35,10 @@ function SeasonCard() {
         className="pointer-events-none absolute -right-6 -top-6 h-40 w-40 opacity-15"
       />
       <div className="relative">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sun">Harvest · Season {ACTIVE_SEASON_ID}</p>
-        <h2 id="season-card-heading" className="mt-1 font-display text-3xl font-bold text-cream sm:text-4xl">
-          Total locked
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/harvest-logo.png" alt="Harvest" width={900} height={291} className="h-auto w-56 drop-shadow-lg sm:w-72" />
+        <h2 id="season-card-heading" className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-sun">
+          Season {ACTIVE_SEASON_ID} · Total locked
         </h2>
 
         {season ? (
