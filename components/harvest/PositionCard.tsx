@@ -53,10 +53,12 @@ export function PositionCard({
   season,
   position,
   onClaim,
+  plantingOpen = true,
 }: {
   season: SeasonConfig;
   position: PlantPosition;
   onClaim: () => void;
+  plantingOpen?: boolean;
 }) {
   const wallet = useWalletState();
   const [claimModalOpen, setClaimModalOpen] = useState(false);
@@ -77,7 +79,9 @@ export function PositionCard({
       <Card id="position">
         <h2 className="font-display text-lg font-bold text-ink">My Position</h2>
         <p className="mt-3 text-sm text-ink-soft">
-          You haven&apos;t planted this season yet. Use the Plant widget to get started.
+          {plantingOpen
+            ? "You haven't planted this season yet. Use the Plant widget to get started."
+            : "Planting is closed for this season, so there's no position for this wallet."}
         </p>
       </Card>
     );

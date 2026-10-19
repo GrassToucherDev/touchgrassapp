@@ -10,7 +10,12 @@ const STEPS = [
   },
 ];
 
-export function HarvestSteps() {
+export function HarvestSteps({ plantingOpen = true }: { plantingOpen?: boolean }) {
+  const steps = STEPS.map((s) =>
+    s.title === "Plant" && !plantingOpen
+      ? { ...s, body: "Planting for this season is closed. Planted tokens are growing toward Harvest Day." }
+      : s
+  );
   return (
     <section aria-labelledby="how-it-works-heading">
       <Card>
@@ -18,7 +23,7 @@ export function HarvestSteps() {
           How Harvest works
         </h2>
         <ol className="mt-4 grid gap-4 sm:grid-cols-3">
-          {STEPS.map((step) => (
+          {steps.map((step) => (
             <li key={step.title} className="flex flex-col gap-1 rounded-xl2 bg-cream p-4">
               <span className="text-2xl" aria-hidden="true">
                 {step.icon}

@@ -61,3 +61,11 @@ export function clampToIncrement(amount: number, minimum: number, increment: num
 export function pad2(n: number): string {
   return n.toString().padStart(2, "0");
 }
+
+/**
+ * Planting is open only while the on-chain status says so AND the planting
+ * window hasn't ended. Once it closes the UI must not offer any planting action.
+ */
+export function isPlantingOpen(status: string, plantingEndSeconds: number, nowMs: number = Date.now()): boolean {
+  return status === "planting" && nowMs <= plantingEndSeconds * 1000;
+}

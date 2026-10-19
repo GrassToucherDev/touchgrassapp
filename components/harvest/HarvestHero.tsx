@@ -2,12 +2,18 @@
 
 import { Button } from "@/components/ui/Button";
 import { SeasonCountdown } from "./SeasonCountdown";
-import { formatTokenAmount } from "@/lib/harvest/utils";
+import { formatTokenAmount, isPlantingOpen } from "@/lib/harvest/utils";
 import type { SeasonConfig } from "@/lib/harvest/types";
 
 export function HarvestHero({ season }: { season: SeasonConfig }) {
+  const plantingOpen = isPlantingOpen(season.status, new Date(season.plantingEnd).getTime() / 1000);
+
   function scrollToPlant() {
     document.getElementById("plant")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function scrollToShare() {
+    document.getElementById("share")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   return (
@@ -32,11 +38,13 @@ export function HarvestHero({ season }: { season: SeasonConfig }) {
         />
       </h1>
       <p className="mt-4 max-w-lg text-base text-cream/90 sm:text-lg">
-        Plant $TOUCHGRASS. Grow together. Harvest together.
+        {plantingOpen
+          ? "Plant $TOUCHGRASS. Grow together. Harvest together."
+          : "Planting is closed. Grow together. Harvest together."}
       </p>
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-grass-light/25 px-3 py-1 text-xs font-semibold text-grass-light">🌱 Active Season</span>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-grass-light/25 px-3 py-1 text-xs font-semibold text-grass-light">{plantingOpen ? "🌱 Active Season" : "🌱 Growing · Planting closed"}</span>
         <span className="font-display text-lg font-bold text-cream">{season.seasonName}</span>
       </div>
       <p className="mt-2 max-w-md text-sm text-cream/70">{season.description}</p>
@@ -54,10 +62,16 @@ export function HarvestHero({ season }: { season: SeasonConfig }) {
       </div>
 
       <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <SeasonCountdown targetIso={season.harvestDate} />
-        <Button variant="primary" size="lg" onClick={scrollToPlant} className="w-full sm:w-auto">
-          🌾 Plant $TOUCHGRASS
-        </Button>
+        <SeasonCountdown />
+        {plantingOpen ? (
+          <Button variant="primary" size="lg" onClick={scrollToPlant} className="w-full sm:w-auto">
+            🌾 Plant $TOUCHGRASS
+          </Button>
+        ) : (
+          <Button variant="primary" size="lg" onClick={scrollToShare} className="w-full sm:w-auto">
+            📣 Share Harvest
+          </Button>
+        )}
       </div>
       </div>
     </section>
