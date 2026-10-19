@@ -30,7 +30,7 @@ export function EcosystemBanners() {
               <img
                 src="/brand/pog-logo.png"
                 alt="Proof of Grass"
-                className="h-28 w-auto drop-shadow-md transition-transform duration-200 group-hover:scale-105 sm:h-32"
+                className="h-auto w-52 shrink-0 drop-shadow-md transition-transform duration-200 group-hover:scale-105 sm:w-60"
               />
               <p className="max-w-[16rem] text-sm font-medium text-field-light">
                 Go outside. Prove it. Build your streak, earn rewards, and make an impact.
@@ -59,7 +59,7 @@ export function EcosystemBanners() {
           <div className="relative flex flex-1 flex-col justify-between gap-4 p-5 sm:p-6">
             <div className="max-w-[58%] sm:max-w-[62%]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/wago-drops-logo.png" alt="WAGO Drops" className="h-14 w-auto" />
+              <img src="/brand/wago-drops-logo.png" alt="WAGO Drops" className="h-auto w-52 drop-shadow-md sm:w-60" />
               <p className="mt-2 text-sm font-medium text-field-light">
                 Real-world treasure hunts on a live map. Find drops, prove you were there, and
                 claim on-chain.
