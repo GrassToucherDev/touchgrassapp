@@ -12,22 +12,31 @@ export function EcosystemBanners() {
           href="https://proofofgrass.app"
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative flex min-h-[200px] overflow-hidden rounded-xl3 bg-field bg-cover bg-center shadow-soft transition-transform duration-200 hover:-translate-y-0.5"
-          style={{ backgroundImage: "url(/brand/meadow.jpg)" }}
+          className="group relative flex min-h-[200px] overflow-hidden rounded-xl3 bg-[linear-gradient(160deg,#a8d4f0_0%,#d4edf8_45%,#f0f8ee_100%)] shadow-soft transition-transform duration-200 hover:-translate-y-0.5"
         >
-          <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-field via-field/85 to-field/20" />
+          {/* Meadow rolling along the bottom edge of the banner */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-cover bg-bottom opacity-80"
+            style={{
+              backgroundImage: "url(/brand/meadow.jpg)",
+              WebkitMaskImage: "linear-gradient(to top, black 40%, transparent)",
+              maskImage: "linear-gradient(to top, black 40%, transparent)",
+            }}
+          />
           <div className="relative flex flex-1 flex-col justify-between gap-4 p-5 sm:p-6">
-            <div>
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/logo.png" alt="" width={40} height={40} className="h-10 w-10 object-contain" />
-              <h3 className="mt-2 font-display text-3xl font-bold leading-tight text-cream sm:text-4xl">
-                Proof of Grass
-              </h3>
-              <p className="mt-1 max-w-xs text-sm text-cream/85">
+              <img
+                src="/brand/pog-logo.png"
+                alt="Proof of Grass"
+                className="h-28 w-auto drop-shadow-md transition-transform duration-200 group-hover:scale-105 sm:h-32"
+              />
+              <p className="max-w-[16rem] text-sm font-medium text-field-light">
                 Go outside. Prove it. Build your streak, earn rewards, and make an impact.
               </p>
             </div>
-            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[linear-gradient(135deg,#7dc832_0%,#5ba622_100%)] px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_24px_rgba(125,200,50,0.3)] transition group-hover:brightness-95">
+            <span className="relative inline-flex w-fit items-center gap-2 rounded-full bg-[linear-gradient(135deg,#7dc832_0%,#5ba622_100%)] px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_24px_rgba(125,200,50,0.3)] transition group-hover:brightness-95">
               Start your streak <span aria-hidden="true">→</span>
             </span>
           </div>
