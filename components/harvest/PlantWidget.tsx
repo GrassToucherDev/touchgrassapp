@@ -181,7 +181,7 @@ export function PlantWidget({
         </button>
 
         <div className="flex flex-col items-center">
-          <span className="font-display text-2xl font-extrabold tabular-nums text-ink sm:text-3xl">
+          <span className="font-display text-3xl font-bold tabular-nums text-ink sm:text-4xl">
             {formatTokenAmount(amount)}
           </span>
           <span className="text-xs font-semibold text-ink-soft">$TOUCHGRASS</span>
@@ -224,7 +224,7 @@ export function PlantWidget({
       )}
 
       <Button
-        variant={wallet.connected ? "primary" : "secondary"}
+        variant="primary"
         size="lg"
         className="mt-4 w-full"
         onClick={handlePrimaryAction}

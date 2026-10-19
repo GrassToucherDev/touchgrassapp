@@ -10,11 +10,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-harvest text-white hover:bg-harvest-dark active:bg-harvest-dark disabled:bg-harvest/40",
+    "bg-[linear-gradient(135deg,#7dc832_0%,#5ba622_100%)] text-white shadow-[0_0_24px_rgba(125,200,50,0.3)] hover:brightness-95 active:brightness-90 disabled:opacity-50 disabled:shadow-none",
   secondary:
-    "bg-grass text-white hover:bg-grass-dark active:bg-grass-dark disabled:bg-grass/40",
+    "bg-[linear-gradient(135deg,#f5c04a_0%,#e8a020_100%)] text-field hover:brightness-95 active:brightness-90 disabled:opacity-50",
   ghost:
-    "bg-white text-ink border border-ink/10 hover:bg-cream-dark disabled:text-ink/30 disabled:bg-white",
+    "bg-white/75 text-field border-[1.5px] border-grass-light/40 hover:bg-white disabled:text-ink/30",
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -27,8 +27,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={`inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold
-          shadow-softer transition-colors duration-150
+        className={`inline-flex items-center justify-center gap-2 rounded-full font-body font-bold tracking-[0.02em]
+          transition duration-150
           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grass-dark
           disabled:cursor-not-allowed disabled:shadow-none
           ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}

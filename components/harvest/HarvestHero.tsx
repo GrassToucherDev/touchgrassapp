@@ -34,7 +34,7 @@ export function HarvestHero({ season }: { season: SeasonConfig }) {
         <img src="/brand/logo.png" alt="" width={28} height={28} className="h-7 w-7 object-contain" />
         Touch Grass
       </p>
-      <h1 className="mt-2 font-display text-4xl font-extrabold leading-tight text-cream sm:text-5xl">
+      <h1 className="mt-2 font-display text-5xl font-bold leading-none text-cream sm:text-7xl">
         Harvest
       </h1>
       <p className="mt-3 max-w-lg text-base text-cream/80 sm:text-lg">
@@ -49,7 +49,7 @@ export function HarvestHero({ season }: { season: SeasonConfig }) {
 
       <div className="mt-6" aria-live="polite">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sun">Total locked in Harvest</p>
-        <p className="mt-1 font-display text-3xl font-extrabold text-cream sm:text-4xl">
+        <p className="mt-1 font-display text-4xl font-bold text-cream sm:text-5xl">
           {formatTokenAmount(season.totalLocked)}{" "}
           <span className="text-lg font-bold text-cream/70 sm:text-xl">$TOUCHGRASS</span>
         </p>

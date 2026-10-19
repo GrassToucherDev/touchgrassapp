@@ -23,7 +23,7 @@ export function HarvestSteps() {
               <span className="text-2xl" aria-hidden="true">
                 {step.icon}
               </span>
-              <span className="font-display font-bold text-ink">{step.title}</span>
+              <span className="font-display text-xl font-bold text-ink">{step.title}</span>
               <span className="text-sm text-ink-soft">{step.body}</span>
             </li>
           ))}

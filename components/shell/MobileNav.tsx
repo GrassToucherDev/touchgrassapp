@@ -16,7 +16,7 @@ export function MobileNav() {
   return (
     <nav
       aria-label="Main navigation"
-      className="fixed inset-x-0 bottom-0 z-40 flex border-t border-ink/10 bg-white pb-[env(safe-area-inset-bottom)] lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 flex border-t border-white/60 bg-white/90 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] lg:hidden"
     >
       {MOBILE_ITEMS.map((item) => {
         const active = pathname === item.href;
