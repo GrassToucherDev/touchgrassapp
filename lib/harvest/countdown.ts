@@ -54,3 +54,10 @@ export function buildHarvestCaption({ days, plantedAmount = 0, includeAmount = t
 
   return `${opener}\n\n${countdown}\n\n${status}\n\n$TOUCHGRASS #TouchGrass #WAGO`;
 }
+
+/** Whole h/m/s until the countdown number next changes (the user's local midnight). */
+export function untilNextDay(now: Date = new Date()): { hours: number; minutes: number; seconds: number } {
+  const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime();
+  const total = Math.max(0, Math.floor((next - now.getTime()) / 1000));
+  return { hours: Math.floor(total / 3600), minutes: Math.floor((total % 3600) / 60), seconds: total % 60 };
+}

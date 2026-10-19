@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/Card";
 import { SeasonCountdown } from "@/components/harvest/SeasonCountdown";
 import { useSeasonData } from "@/lib/harvest/useSeasonData";
 import { useTokenPrice, formatPrice } from "@/lib/useTokenPrice";
-import { formatCompact, formatTokenAmount } from "@/lib/harvest/utils";
+import { formatCompact, formatTokenAmount, isPlantingOpen } from "@/lib/harvest/utils";
 import { ShareHarvest } from "@/components/harvest/ShareHarvest";
 import { useMyPosition } from "@/lib/harvest/useMyPosition";
 import { EcosystemBanners } from "./EcosystemBanners";
@@ -54,13 +54,22 @@ function SeasonCard() {
               <Stat label="Planted all-time" value={formatCompact(season.totalPlanted)} />
             </div>
             <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-              <SeasonCountdown targetIso={new Date(season.harvestDate * 1000).toISOString()} />
-              <Link
-                href="/harvest"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#7dc832_0%,#5ba622_100%)] px-6 py-3.5 text-base font-bold text-white shadow-[0_0_24px_rgba(125,200,50,0.3)] transition hover:brightness-95"
-              >
-                🌾 Plant $TOUCHGRASS
-              </Link>
+              <SeasonCountdown />
+              {isPlantingOpen(season.status, season.plantingEnd) ? (
+                <Link
+                  href="/harvest"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#7dc832_0%,#5ba622_100%)] px-6 py-3.5 text-base font-bold text-white shadow-[0_0_24px_rgba(125,200,50,0.3)] transition hover:brightness-95"
+                >
+                  🌾 Plant $TOUCHGRASS
+                </Link>
+              ) : (
+                <a
+                  href="#share"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#7dc832_0%,#5ba622_100%)] px-6 py-3.5 text-base font-bold text-white shadow-[0_0_24px_rgba(125,200,50,0.3)] transition hover:brightness-95"
+                >
+                  📣 Share Harvest
+                </a>
+              )}
             </div>
           </>
         ) : loading ? (

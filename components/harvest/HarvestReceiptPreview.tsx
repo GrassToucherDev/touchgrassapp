@@ -7,9 +7,11 @@ import { useWalletState } from "@/lib/wallet/useWalletState";
 export function HarvestReceiptPreview({
   season,
   position,
+  plantingOpen = true,
 }: {
   season: SeasonConfig;
   position: PlantPosition;
+  plantingOpen?: boolean;
 }) {
   const wallet = useWalletState();
 
@@ -21,7 +23,9 @@ export function HarvestReceiptPreview({
           <Badge tone="neutral">Non-transferable</Badge>
         </div>
         <p className="mt-3 text-sm text-ink-soft">
-          Your receipt preview will appear here after you plant $TOUCHGRASS this season.
+          {plantingOpen
+            ? "Your receipt preview will appear here after you plant $TOUCHGRASS this season."
+            : "Planting is closed for this season, so there's no receipt for this wallet."}
         </p>
       </Card>
     );

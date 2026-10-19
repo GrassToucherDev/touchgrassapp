@@ -10,6 +10,7 @@ import { HarvestNotice } from "./HarvestNotice";
 import { ShareHarvest } from "./ShareHarvest";
 import { useSeasonData, type OnChainSeasonConfig } from "@/lib/harvest/useSeasonData";
 import { useMyPosition } from "@/lib/harvest/useMyPosition";
+import { isPlantingOpen } from "@/lib/harvest/utils";
 import type { SeasonConfig, SeasonStatus } from "@/lib/harvest/types";
 
 const ACTIVE_SEASON_ID = 1;
@@ -81,6 +82,7 @@ export function HarvestPageContent() {
   }
 
   const displaySeason = toDisplaySeason(onChainSeason);
+  const plantingOpen = isPlantingOpen(displaySeason.status, onChainSeason.plantingEnd);
 
   // Adapt the real on-chain position into the shape PositionCard/
   // HarvestReceiptPreview already expect. This is the single source of
@@ -117,21 +119,21 @@ export function HarvestPageContent() {
       <div className="space-y-8 px-4 pt-6 sm:px-8">
         <SeasonStats season={displaySeason} />
         <ShareHarvest plantedAmount={displayPosition.status === "locked" ? displayPosition.amount : 0} />
-        <HarvestSteps />
+        <HarvestSteps plantingOpen={plantingOpen} />
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <PlantWidget season={onChainSeason} onPlantConfirmed={handlePlantConfirmed} />
+        <div className={plantingOpen ? "grid gap-6 lg:grid-cols-2" : "grid gap-6"}>
+          {plantingOpen && <PlantWidget season={onChainSeason} onPlantConfirmed={handlePlantConfirmed} />}
           {positionLoading ? (
             <div className="flex items-center justify-center rounded-xl3 bg-white p-6 shadow-soft">
               <p className="text-sm text-ink-soft">Loading your position...</p>
             </div>
           ) : (
-            <PositionCard season={displaySeason} position={displayPosition} onClaim={handleClaim} />
+            <PositionCard season={displaySeason} position={displayPosition} onClaim={handleClaim} plantingOpen={plantingOpen} />
           )}
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <HarvestReceiptPreview season={displaySeason} position={displayPosition} />
+          <HarvestReceiptPreview season={displaySeason} position={displayPosition} plantingOpen={plantingOpen} />
         </div>
 
         <HarvestNotice />
