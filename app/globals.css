@@ -17,8 +17,8 @@
   --color-ink-soft: #2d5a1a;
   --color-sky: #e8f4fd;
 
-  --font-display: var(--font-cormorant), Georgia, serif;
-  --font-body: var(--font-dm-sans), -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-display: var(--font-fredoka), "Nunito", system-ui, sans-serif;
+  --font-body: var(--font-nunito), -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 
   --radius-xl2: 0.875rem;
   --radius-xl3: 1.25rem;
@@ -51,10 +51,10 @@ body {
   color: var(--color-ink);
 }
 
-/* Serif display face is lighter than Nunito was; keep headings crisp and the numerals lining. */
+/* Rounded display face (Fredoka) to match touchgrass.today. */
 .font-display {
   font-variant-numeric: lining-nums;
-  letter-spacing: -0.005em;
+  letter-spacing: 0;
 }
 
 .wallet-adapter-button {
