@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import type { AnchorWallet } from "@solana/wallet-adapter-react";
 import idl from "./idl/harvest_program.json";
 
@@ -21,6 +21,25 @@ export function getProgram(wallet: AnchorWallet | undefined) {
     commitment: "confirmed",
   });
 
+  return new anchor.Program(idl as anchor.Idl, provider);
+}
+
+/**
+ * Read-only program for public pages (season totals, etc.). Needs no wallet: it uses a throwaway
+ * keypair that can never sign, so it can only fetch accounts — it cannot send transactions.
+ */
+export function getReadonlyProgram() {
+  const keypair = Keypair.generate();
+  const readonlyWallet = {
+    publicKey: keypair.publicKey,
+    signTransaction: async () => {
+      throw new Error("Read-only: signing is not available");
+    },
+    signAllTransactions: async () => {
+      throw new Error("Read-only: signing is not available");
+    },
+  } as unknown as AnchorWallet;
+  const provider = new anchor.AnchorProvider(getConnection(), readonlyWallet, { commitment: "confirmed" });
   return new anchor.Program(idl as anchor.Idl, provider);
 }
 

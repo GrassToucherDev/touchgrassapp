@@ -37,6 +37,8 @@ function toDisplaySeason(onChain: OnChainSeasonConfig): SeasonConfig {
     minimumDeposit: onChain.minimumDeposit,
     depositIncrement: onChain.depositIncrement,
     totalPlanted: onChain.totalPlanted,
+    totalLocked: onChain.totalLocked,
+    lockedParticipantCount: onChain.lockedParticipantCount,
     participantCount: onChain.participantCount,
     receiptEnabled: true,
     harvestReady: onChain.status === "harvestReady",
@@ -44,7 +46,7 @@ function toDisplaySeason(onChain: OnChainSeasonConfig): SeasonConfig {
 }
 
 export function HarvestPageContent() {
-  const { season: onChainSeason, loading, error } = useSeasonData(ACTIVE_SEASON_ID);
+  const { season: onChainSeason, loading, error, refetch: refetchSeason } = useSeasonData(ACTIVE_SEASON_ID);
   const {
     position: onChainPosition,
     loading: positionLoading,
@@ -55,7 +57,7 @@ export function HarvestPageContent() {
     return (
       <div id="top" className="flex min-h-[50vh] items-center justify-center">
         <p className="text-ink-soft">
-          {onChainSeason === null ? "Connect your wallet to load season data..." : "Loading season..."}
+          Loading season...
         </p>
       </div>
     );
@@ -64,10 +66,15 @@ export function HarvestPageContent() {
   if (error || !onChainSeason) {
     return (
       <div id="top" className="flex min-h-[50vh] flex-col items-center justify-center gap-2 px-4 text-center">
-        <p className="text-ink-soft">
-          Connect your wallet to view live Harvest data.
-        </p>
+        <p className="text-ink-soft">Couldn&apos;t load live Harvest data right now.</p>
         {error && <p className="text-xs text-harvest-dark">{error}</p>}
+        <button
+          type="button"
+          onClick={() => void refetchSeason()}
+          className="mt-2 rounded-full border border-ink-soft/30 px-4 py-2 text-sm font-semibold text-ink"
+        >
+          Try again
+        </button>
       </div>
     );
   }
@@ -94,10 +101,12 @@ export function HarvestPageContent() {
 
   function handlePlantConfirmed() {
     void refetchPosition();
+    void refetchSeason();
   }
 
   function handleClaim() {
     void refetchPosition();
+    void refetchSeason();
   }
 
   return (

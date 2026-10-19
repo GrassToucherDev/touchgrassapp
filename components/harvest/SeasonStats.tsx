@@ -28,19 +28,16 @@ export function SeasonStats({ season }: { season: SeasonConfig }) {
       <h2 id="season-stats-heading" className="sr-only">
         Season stats
       </h2>
-      <p className="text-xs font-medium text-ink-soft">
-        🔍 Preview data — figures below are sample values for Phase 1, not live totals.
-      </p>
-      <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         <StatCard
-          icon="🌱"
-          label="Total Planted"
-          value={`${formatCompact(season.totalPlanted)} $TOUCHGRASS`}
+          icon="🔒"
+          label="Total Locked"
+          value={`${formatCompact(season.totalLocked)} $TOUCHGRASS`}
         />
         <StatCard
           icon="👥"
-          label="Participants"
-          value={formatTokenAmount(season.participantCount)}
+          label="Planters"
+          value={formatTokenAmount(season.lockedParticipantCount)}
         />
         <StatCard
           icon="📅"
@@ -49,6 +46,9 @@ export function SeasonStats({ season }: { season: SeasonConfig }) {
         />
         <StatCard icon="☀️" label="Harvest Date" value={formatDate(season.harvestDate)} />
       </div>
+      <p className="mt-2 text-xs text-ink-soft">
+        Live from the Harvest program on Solana. Locked = principal currently held in escrow.
+      </p>
     </section>
   );
 }
