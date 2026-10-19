@@ -43,8 +43,8 @@ export function HarvestHero({ season }: { season: SeasonConfig }) {
 
       <div className="mt-6" aria-live="polite">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sun">Total locked in Harvest</p>
-        <p className="mt-1 font-display text-4xl font-bold text-cream sm:text-5xl">
-          {formatTokenAmount(season.totalLocked)}{" "}
+        <p className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1 font-display text-3xl font-bold text-cream min-[380px]:text-4xl sm:text-5xl">
+          <span className="max-w-full break-words">{formatTokenAmount(season.totalLocked)}</span>
           <span className="text-lg font-bold text-cream/70 sm:text-xl">$TOUCHGRASS</span>
         </p>
         <p className="mt-1 text-xs text-cream/60">

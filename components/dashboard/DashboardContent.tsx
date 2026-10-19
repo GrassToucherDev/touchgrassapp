@@ -12,9 +12,9 @@ const ACTIVE_SEASON_ID = 1;
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div>
+    <div className="min-w-0">
       <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-cream/60">{label}</p>
-      <p className="mt-0.5 font-display text-2xl font-bold text-cream sm:text-3xl">{value}</p>
+      <p className="mt-0.5 break-words font-display text-2xl font-bold text-cream sm:text-3xl">{value}</p>
     </div>
   );
 }
@@ -43,9 +43,9 @@ function SeasonCard() {
 
         {season ? (
           <>
-            <p className="mt-2 font-display text-5xl font-bold leading-none text-cream sm:text-6xl" aria-live="polite">
-              {formatTokenAmount(season.totalLocked)}
-              <span className="ml-2 text-xl font-bold text-cream/70 sm:text-2xl">$TOUCHGRASS</span>
+            <p className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1 font-display text-4xl font-bold leading-none text-cream min-[380px]:text-5xl sm:text-6xl" aria-live="polite">
+              <span className="max-w-full break-words">{formatTokenAmount(season.totalLocked)}</span>
+              <span className="text-lg font-bold text-cream/70 sm:text-2xl">$TOUCHGRASS</span>
             </p>
             <div className="mt-5 grid grid-cols-2 gap-4 sm:max-w-md">
               <Stat label="Planters" value={formatTokenAmount(season.lockedParticipantCount)} />

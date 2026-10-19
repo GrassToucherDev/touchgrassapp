@@ -12,12 +12,12 @@ function StatCard({
   value: string;
 }) {
   return (
-    <Card className="flex flex-col gap-1">
+    <Card className="flex min-w-0 flex-col gap-1">
       <span className="text-xl" aria-hidden="true">
         {icon}
       </span>
       <span className="text-xs font-semibold uppercase tracking-wide text-ink-soft">{label}</span>
-      <span className="font-display text-2xl font-bold leading-tight text-ink">{value}</span>
+      <span className="break-words font-display text-xl font-bold leading-tight text-ink sm:text-2xl">{value}</span>
     </Card>
   );
 }
