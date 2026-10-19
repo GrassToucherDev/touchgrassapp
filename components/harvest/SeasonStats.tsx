@@ -17,7 +17,7 @@ function StatCard({
         {icon}
       </span>
       <span className="text-xs font-semibold uppercase tracking-wide text-ink-soft">{label}</span>
-      <span className="font-display text-xl font-bold text-ink">{value}</span>
+      <span className="font-display text-2xl font-bold leading-tight text-ink">{value}</span>
     </Card>
   );
 }
