@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Fredoka, Nunito } from "next/font/google";
 import { WalletProviders } from "@/lib/wallet/WalletProviders";
 import { AppShell } from "@/components/shell/AppShell";
 import "./globals.css";
 
-// Same type pairing as Proof of Grass and WAGO Drops:
-// Cormorant Garamond for display/headings, DM Sans for body.
-const cormorant = Cormorant_Garamond({
+// Same type pairing as touchgrass.today:
+// Fredoka for display/headings, Nunito for body.
+const fredoka = Fredoka({
   subsets: ["latin"],
   weight: ["500", "600", "700"],
-  variable: "--font-cormorant",
+  variable: "--font-fredoka",
 });
 
-const dmSans = DM_Sans({
+const nunito = Nunito({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-dm-sans",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-nunito",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${fredoka.variable} ${nunito.variable}`}>
       <body>
         <WalletProviders>
           <AppShell>{children}</AppShell>
