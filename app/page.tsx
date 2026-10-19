@@ -7,6 +7,7 @@ const FEATURES = [
   {
     href: "/harvest",
     icon: "🌾",
+    image: "/brand/harvest-badge.png",
     title: "Harvest",
     body: "Plant $TOUCHGRASS and grow together toward Harvest Day.",
     live: true,
@@ -58,9 +59,20 @@ export default function DashboardPage() {
           <Link key={feature.href} href={feature.href} className="block">
             <Card className="h-full transition-shadow hover:shadow-none">
               <div className="flex items-start justify-between">
-                <span className="text-2xl" aria-hidden="true">
-                  {feature.icon}
-                </span>
+                {"image" in feature && feature.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={feature.image}
+                    alt=""
+                    width={56}
+                    height={56}
+                    className="h-14 w-14 rounded-xl2 object-cover shadow-softer"
+                  />
+                ) : (
+                  <span className="text-2xl" aria-hidden="true">
+                    {feature.icon}
+                  </span>
+                )}
                 {feature.live ? (
                   <Badge tone="grass">Live</Badge>
                 ) : (

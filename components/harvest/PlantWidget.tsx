@@ -139,7 +139,11 @@ export function PlantWidget({
 
   return (
     <Card id="plant" className="scroll-mt-4">
-      <h2 className="font-display text-lg font-bold text-ink">🌱 Plant $TOUCHGRASS</h2>
+      <h2 className="flex items-center gap-2 font-display text-lg font-bold text-ink">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/logo.png" alt="" width={28} height={28} className="h-7 w-7 object-contain" />
+        Plant $TOUCHGRASS
+      </h2>
       <p className="mt-1 text-xs text-ink-soft">
         Choose an amount in {formatTokenAmount(depositIncrement)}-token increments.
       </p>

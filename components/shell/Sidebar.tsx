@@ -10,9 +10,8 @@ export function Sidebar() {
   return (
     <aside className="sticky top-0 hidden h-screen w-56 shrink-0 flex-col border-r border-ink/5 bg-white px-4 py-6 lg:flex">
       <Link href="/" className="mb-8 flex items-center gap-2 px-2">
-        <span className="text-2xl" aria-hidden="true">
-          🌻
-        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/logo.png" alt="" width={36} height={36} className="h-9 w-9 object-contain" />
         <span className="font-display text-lg font-extrabold text-ink">Touch Grass</span>
       </Link>
 
