@@ -18,7 +18,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Touch Grass App",
+  title: "Touch Grass | Harvest",
   description: "Dashboard, Proof of Grass, Harvest, and more — all in one place.",
 };
 
