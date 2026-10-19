@@ -6,6 +6,8 @@ import { SeasonCountdown } from "@/components/harvest/SeasonCountdown";
 import { useSeasonData } from "@/lib/harvest/useSeasonData";
 import { useTokenPrice, formatPrice } from "@/lib/useTokenPrice";
 import { formatCompact, formatTokenAmount } from "@/lib/harvest/utils";
+import { ShareHarvest } from "@/components/harvest/ShareHarvest";
+import { useMyPosition } from "@/lib/harvest/useMyPosition";
 import { EcosystemBanners } from "./EcosystemBanners";
 
 const ACTIVE_SEASON_ID = 1;
@@ -127,6 +129,12 @@ function PriceCard() {
   );
 }
 
+function DashboardShare() {
+  const { season } = useSeasonData(ACTIVE_SEASON_ID);
+  const { position } = useMyPosition(ACTIVE_SEASON_ID, season?.mint);
+  return <ShareHarvest plantedAmount={position?.status === "planted" ? Math.round(position.amount) : 0} />;
+}
+
 export function DashboardContent() {
   return (
     <div className="space-y-8 px-4 pb-10 pt-6 sm:px-8">
@@ -134,6 +142,7 @@ export function DashboardContent() {
         <SeasonCard />
         <PriceCard />
       </div>
+      <DashboardShare />
       <EcosystemBanners />
     </div>
   );

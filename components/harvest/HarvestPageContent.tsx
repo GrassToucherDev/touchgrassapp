@@ -7,6 +7,7 @@ import { PlantWidget } from "./PlantWidget";
 import { PositionCard } from "./PositionCard";
 import { HarvestReceiptPreview } from "./HarvestReceiptPreview";
 import { HarvestNotice } from "./HarvestNotice";
+import { ShareHarvest } from "./ShareHarvest";
 import { useSeasonData, type OnChainSeasonConfig } from "@/lib/harvest/useSeasonData";
 import { useMyPosition } from "@/lib/harvest/useMyPosition";
 import type { SeasonConfig, SeasonStatus } from "@/lib/harvest/types";
@@ -115,6 +116,7 @@ export function HarvestPageContent() {
 
       <div className="space-y-8 px-4 pt-6 sm:px-8">
         <SeasonStats season={displaySeason} />
+        <ShareHarvest plantedAmount={displayPosition.status === "locked" ? displayPosition.amount : 0} />
         <HarvestSteps />
 
         <div className="grid gap-6 lg:grid-cols-2">
