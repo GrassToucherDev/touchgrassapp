@@ -46,22 +46,22 @@ const PLANTED_LINES = [
   "Told {mine_} to grow. It said \"wait {n}.\" Rude. 🌱",
   "Real farmers wake up at 5am. I refresh the countdown every hour. {n} until Harvest. 🌾",
   "Is it Harvest yet? No. Is it Harvest yet? Still no. {n} to go. {mine} is on it. 🌱",
-  "{mine} is planted and WAGO is doing victory laps. Sir, it is not time yet. {n} to go. 🌻",
+  "{mine} is planted and WAGO is doing victory laps. Sir, it is not time yet. {n} to go. ☀️",
 ];
 
 const VISITOR_LINES = [
   "Watching everyone else's seeds grow like it's a sport. {n} until Harvest. 🍿",
-  "Harvest is {n} away and WAGO is already doing a victory dance. Sir, it's not time yet. 🌻",
+  "Harvest is {n} away and WAGO is already doing a victory dance. Sir, it's not time yet. ☀️",
   "Growing season is going great. By great I mean I've refreshed this page 40 times. {n} until Harvest. 🌱",
   "Plot twist: the grass was the real friend we touched along the way. {n} until Harvest. 🌾",
   "Doctors say touch grass. Harvest says wait {n}. I'm doing both. 🌱",
-  "Nothing to see here, just a very patient sunflower. {n} until Harvest. 🌻",
+  "Nothing to see here, just a very patient sun. {n} until Harvest. ☀️",
 ];
 
 const HARVEST_DAY_LINES = [
   "HARVEST DAY. I have never been so ready to dig something up. 🌾",
   "The wait is over. Put down the watering can. It's Harvest Day! 🧑‍🌾",
-  "Planted. Waited. Refreshed 4,000 times. It's Harvest Day! 🌻",
+  "Planted. Waited. Refreshed 4,000 times. It's Harvest Day! ☀️",
 ];
 
 export function buildHarvestCaption({ days, plantedAmount = 0, includeAmount = true, variant = 0 }: CaptionInput): string {
