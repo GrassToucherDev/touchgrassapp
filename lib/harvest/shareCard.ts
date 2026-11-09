@@ -6,7 +6,6 @@ export const SHARE_H = 900;
 const ASSETS = {
   bg: "/share/bg.jpg",
   wago: "/share/wago.png",
-  leaves: "/share/leaves.png",
   grass: "/share/grass.png",
   sprout: "/share/sprout.png",
 };
@@ -87,13 +86,41 @@ function drawWood(ctx: CanvasRenderingContext2D, x: number, y: number, w: number
   ctx.stroke();
 }
 
+/** One cartoon leaf: tip at (x,y) pointing along `angle`, outlined, with a midrib. */
+function drawLeaf(ctx: CanvasRenderingContext2D, x: number, y: number, len: number, wid: number, angle: number) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.bezierCurveTo(len * 0.25, -wid, len * 0.75, -wid * 0.8, len, 0);
+  ctx.bezierCurveTo(len * 0.75, wid * 0.8, len * 0.25, wid, 0, 0);
+  ctx.closePath();
+  const g = ctx.createLinearGradient(0, -wid, 0, wid);
+  g.addColorStop(0, "#7fd23a");
+  g.addColorStop(1, "#2f9a22");
+  ctx.fillStyle = g;
+  ctx.fill();
+  ctx.lineJoin = "round";
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = "#1a4a0a";
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(len * 0.08, 0);
+  ctx.quadraticCurveTo(len * 0.5, wid * 0.08, len * 0.92, 0);
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = "rgba(20,70,10,.7)";
+  ctx.stroke();
+  ctx.restore();
+}
+
 /** Draw outlined text centered at (cx, baselineY), shrinking to fit maxW. */
 function outlinedText(
   ctx: CanvasRenderingContext2D,
   text: string,
   cx: number,
   cy: number,
-  opts: { size: number; maxW: number; fill: string | CanvasGradient; stroke: string; strokeW: number; family: string; shadow?: boolean }
+  opts: { size: number; maxW: number; fill: string | CanvasGradient; stroke: string; strokeW: number; family: string; shadow?: boolean; spacing?: number }
 ) {
   let size = opts.size;
   ctx.font = `700 ${size}px ${opts.family}`;
@@ -104,6 +131,8 @@ function outlinedText(
   }
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
+  // Extra tracking keeps neighbouring letters from fusing under the thick outline.
+  (ctx as CanvasRenderingContext2D & { letterSpacing?: string }).letterSpacing = opts.spacing ? `${opts.spacing}px` : "0px";
   ctx.lineJoin = "round";
   ctx.miterLimit = 2;
   if (opts.shadow) {
@@ -121,6 +150,7 @@ function outlinedText(
   ctx.strokeText(text, cx, cy);
   ctx.fillStyle = opts.fill;
   ctx.fillText(text, cx, cy);
+  (ctx as CanvasRenderingContext2D & { letterSpacing?: string }).letterSpacing = "0px";
   return size;
 }
 
@@ -133,10 +163,9 @@ export async function renderHarvestShareCard(days: number): Promise<Blob> {
     /* fall back to whatever is available */
   }
 
-  const [bg, wago, leaves, grass, sprout] = await Promise.all([
+  const [bg, wago, grass, sprout] = await Promise.all([
     loadImage(ASSETS.bg),
     loadImage(ASSETS.wago),
-    loadImage(ASSETS.leaves),
     loadImage(ASSETS.grass),
     loadImage(ASSETS.sprout),
   ]);
@@ -161,17 +190,11 @@ export async function renderHarvestShareCard(days: number): Promise<Blob> {
   drawWood(ctx, bx, 120, bw, 500, 26, 4); // backboard
   drawWood(ctx, bx + 170, 36, bw - 340, 112, 20); // top plank
 
-  // vines
-  ctx.save();
-  ctx.translate(bx - 38, 96);
-  ctx.rotate(-0.1);
-  ctx.drawImage(leaves, 0, 0, 160, (leaves.height / leaves.width) * 160 * 0.55, 0, 0, 160, (leaves.height / leaves.width) * 160 * 0.55);
-  ctx.restore();
-  ctx.save();
-  ctx.translate(bx + bw + 38, 520);
-  ctx.rotate(Math.PI - 0.1);
-  ctx.drawImage(leaves, 0, 0, 160, (leaves.height / leaves.width) * 160 * 0.55, 0, 0, 160, (leaves.height / leaves.width) * 160 * 0.55);
-  ctx.restore();
+  // vines: leaf clusters sprouting from the sign's top-left and bottom-right corners
+  const tl: [number, number, number, number][] = [[bx + 20, 150, 150, 46], [bx + 10, 128, 130, 40], [bx + 30, 168, 120, 38]];
+  tl.forEach(([lx, ly, ln, wd], i) => drawLeaf(ctx, lx, ly, ln, wd, [-2.55, -2.05, 2.75][i]));
+  const br: [number, number, number, number][] = [[bx + bw - 20, 590, 150, 46], [bx + bw - 10, 612, 130, 40], [bx + bw - 30, 572, 120, 38]];
+  br.forEach(([lx, ly, ln, wd], i) => drawLeaf(ctx, lx, ly, ln, wd, [0.6, 1.1, -0.4][i]));
 
   const cx = bx + bw / 2;
   const cream = "#fff1c4";
@@ -180,15 +203,15 @@ export async function renderHarvestShareCard(days: number): Promise<Blob> {
   const tpY = 94;
   const sproutS = 78;
   ctx.drawImage(sprout, cx - 250, tpY - sproutS / 2, sproutS, sproutS);
-  outlinedText(ctx, "HARVEST", cx + 40, tpY + 2, { size: 78, maxW: 420, fill: cream, stroke: "#3a2008", strokeW: 12, family });
+  outlinedText(ctx, "HARVEST", cx + 40, tpY + 2, { size: 74, maxW: 420, fill: cream, stroke: "#3a2008", strokeW: 8, family, spacing: 6 });
 
   // The big number (or HARVEST DAY)
   const headline = countdownHeadline(days);
   const numGrad = ctx.createLinearGradient(0, 210, 0, 470);
   numGrad.addColorStop(0, "#ffe86a");
   numGrad.addColorStop(1, "#f6b800");
-  outlinedText(ctx, headline, cx, 330, {
-    size: isHarvestDay(days) ? 180 : 370,
+  outlinedText(ctx, headline, cx, 336, {
+    size: isHarvestDay(days) ? 180 : 330,
     maxW: bw - 130,
     fill: numGrad,
     stroke: "#3a2008",
@@ -199,7 +222,7 @@ export async function renderHarvestShareCard(days: number): Promise<Blob> {
 
   // lower plank
   drawWood(ctx, bx - 30, 500, bw + 60, 120, 22);
-  outlinedText(ctx, countdownSubline(days), cx, 562, { size: 78, maxW: bw - 40, fill: cream, stroke: "#3a2008", strokeW: 12, family });
+  outlinedText(ctx, countdownSubline(days), cx, 562, { size: 72, maxW: bw - 60, fill: cream, stroke: "#3a2008", strokeW: 8, family, spacing: 5 });
 
   // Info plate
   const px = bx + 40, py = 650, pw = bw - 80, ph = 118;
