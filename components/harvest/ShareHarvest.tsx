@@ -37,6 +37,7 @@ export function ShareHarvest({ plantedAmount = 0 }: Props) {
   const [includeAmount, setIncludeAmount] = useState(true);
   const [caption, setCaption] = useState("");
   const [captionEdited, setCaptionEdited] = useState(false);
+  const [variant, setVariant] = useState(0);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
@@ -72,8 +73,8 @@ export function ShareHarvest({ plantedAmount = 0 }: Props) {
 
   // Caption follows the countdown + position unless the user has edited it.
   useEffect(() => {
-    if (!captionEdited) setCaption(buildHarvestCaption({ days, plantedAmount, includeAmount }));
-  }, [days, plantedAmount, includeAmount, captionEdited]);
+    if (!captionEdited) setCaption(buildHarvestCaption({ days, plantedAmount, includeAmount, variant }));
+  }, [days, plantedAmount, includeAmount, variant, captionEdited]);
 
   async function handleShare() {
     setBusy(true);
@@ -82,7 +83,7 @@ export function ShareHarvest({ plantedAmount = 0 }: Props) {
       // Always regenerate from "now" so the image, caption and countdown agree.
       const d = daysUntilHarvest();
       setDays(d);
-      const text = captionEdited ? caption : buildHarvestCaption({ days: d, plantedAmount, includeAmount });
+      const text = captionEdited ? caption : buildHarvestCaption({ days: d, plantedAmount, includeAmount, variant });
       const blob = await renderHarvestShareCard(d);
       const file = new File([blob], `harvest-${d}-days.png`, { type: "image/png" });
 
@@ -192,6 +193,16 @@ export function ShareHarvest({ plantedAmount = 0 }: Props) {
         </Button>
         <Button variant="ghost" onClick={handleCopy} className="w-full sm:w-auto">
           Copy caption
+        </Button>
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setCaptionEdited(false);
+            setVariant((v) => v + 1);
+          }}
+          className="w-full sm:w-auto"
+        >
+          Funny caption 🎲
         </Button>
       </div>
       {note && (

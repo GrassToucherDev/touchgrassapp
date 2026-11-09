@@ -34,25 +34,48 @@ export interface CaptionInput {
   /** Planted $TOUCHGRASS principal, whole tokens. Omit/0 when the user has no position. */
   plantedAmount?: number;
   includeAmount?: boolean;
+  /** Bump to rotate to the next caption. Combined with the day number so each day starts differently. */
+  variant?: number;
 }
 
-export function buildHarvestCaption({ days, plantedAmount = 0, includeAmount = true }: CaptionInput): string {
+// {mine_} = same, lowercase "my" for mid-sentence; {mine} = "My 50,000 $TOUCHGRASS" / "My $TOUCHGRASS"; {n} = "113 days"
+const PLANTED_LINES = [
+  "{mine} is in the ground. I check on it every five minutes. It has not grown. {n} to go. 🌱",
+  "Planted my seeds and now I'm just standing over the dirt staring at it. {n} until Harvest. 👀",
+  "{mine} is planted. Patience is a virtue and I am a tourist. {n} until Harvest. 🧑‍🌾",
+  "Told {mine_} to grow. It said \"wait {n}.\" Rude. 🌱",
+  "Real farmers wake up at 5am. I refresh the countdown every hour. {n} until Harvest. 🌾",
+  "Is it Harvest yet? No. Is it Harvest yet? Still no. {n} to go. {mine} is on it. 🌱",
+  "{mine} is planted and WAGO is doing victory laps. Sir, it is not time yet. {n} to go. 🌻",
+];
+
+const VISITOR_LINES = [
+  "Watching everyone else's seeds grow like it's a sport. {n} until Harvest. 🍿",
+  "Harvest is {n} away and WAGO is already doing a victory dance. Sir, it's not time yet. 🌻",
+  "Growing season is going great. By great I mean I've refreshed this page 40 times. {n} until Harvest. 🌱",
+  "Plot twist: the grass was the real friend we touched along the way. {n} until Harvest. 🌾",
+  "Doctors say touch grass. Harvest says wait {n}. I'm doing both. 🌱",
+  "Nothing to see here, just a very patient sunflower. {n} until Harvest. 🌻",
+];
+
+const HARVEST_DAY_LINES = [
+  "HARVEST DAY. I have never been so ready to dig something up. 🌾",
+  "The wait is over. Put down the watering can. It's Harvest Day! 🧑‍🌾",
+  "Planted. Waited. Refreshed 4,000 times. It's Harvest Day! 🌻",
+];
+
+export function buildHarvestCaption({ days, plantedAmount = 0, includeAmount = true, variant = 0 }: CaptionInput): string {
   const planted = plantedAmount > 0;
-  const opener = planted
-    ? includeAmount
-      ? `My ${Math.round(plantedAmount).toLocaleString("en-US")} $TOUCHGRASS is planted 🌱`
-      : "My $TOUCHGRASS is planted 🌱"
-    : "Harvest is growing 🌱";
+  const mine =
+    planted && includeAmount ? `My ${Math.round(plantedAmount).toLocaleString("en-US")} $TOUCHGRASS` : "My $TOUCHGRASS";
+  const mineLc = mine.replace(/^My/, "my");
+  const n = `${days} ${days === 1 ? "day" : "days"}`;
 
-  const countdown = isHarvestDay(days)
-    ? "It's Harvest Day! 🌾"
-    : `${days} ${days === 1 ? "day" : "days"} until Harvest.`;
+  const pool = isHarvestDay(days) ? HARVEST_DAY_LINES : planted ? PLANTED_LINES : VISITOR_LINES;
+  const idx = (((Math.abs(days) + variant) % pool.length) + pool.length) % pool.length;
+  const line = pool[idx].replace("{mine_}", mineLc).replace("{mine}", mine).replace("{n}", n);
 
-  const status = isHarvestDay(days)
-    ? "The wait is over. Planting closed, now we harvest."
-    : "Planting is closed. Now we grow toward March 1.";
-
-  return `${opener}\n\n${countdown}\n\n${status}\n\n$TOUCHGRASS #TouchGrass #WAGO`;
+  return `${line}\n\n$TOUCHGRASS #TouchGrass #WAGO`;
 }
 
 /** Whole h/m/s until the countdown number next changes (the user's local midnight). */
