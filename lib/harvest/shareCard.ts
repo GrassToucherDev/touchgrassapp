@@ -5,7 +5,7 @@ export const SHARE_H = 900;
 
 const ASSETS = {
   bg: "/share/bg.jpg",
-  wago: "/share/wago.png",
+  wago: "/share/wago-celebrate.webp",
   grass: "/share/grass.png",
   sprout: "/share/sprout.png",
 };
@@ -180,10 +180,10 @@ export async function renderHarvestShareCard(days: number): Promise<Blob> {
   const bs = Math.max(SHARE_W / bg.width, SHARE_H / bg.height);
   ctx.drawImage(bg, (SHARE_W - bg.width * bs) / 2, 0, bg.width * bs, bg.height * bs);
 
-  // WAGO, lounging bottom-left
-  const ww = 640;
-  const wh = (wago.height / wago.width) * ww;
-  ctx.drawImage(wago, -60, SHARE_H - wh - 60, ww, wh);
+  // WAGO, celebrating bottom-left
+  const wh = 560;
+  const ww = (wago.width / wago.height) * wh;
+  ctx.drawImage(wago, 30, SHARE_H - wh - 105, ww, wh);
 
   // Sign
   const bx = 600, bw = 900;
